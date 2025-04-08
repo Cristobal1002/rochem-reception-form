@@ -1,0 +1,73 @@
+<div class="w-11/12 mx-auto p-8 space-y-6 text-sm">
+    <h1 class="text-2xl font-bold">Recepción e Inspección Física de Productos</h1>
+  
+    <div class="grid grid-cols-3 gap-4">
+      <div><label>No. Guía<input class="input" [(ngModel)]="form.guia"></label></div>
+      <div><label>Orden Compra<input class="input" [(ngModel)]="form.ordenCompra"></label></div>
+      <div><label>Factura<input class="input" [(ngModel)]="form.factura"></label></div>
+    </div>
+  
+    <div class="grid grid-cols-2 gap-4">
+      <div><label>Proveedor<input class="input" [(ngModel)]="form.proveedor"></label></div>
+      <div><label>Cliente<input class="input" [(ngModel)]="form.cliente"></label></div>
+    </div>
+  
+    <div class="grid grid-cols-2 gap-4">
+      <div><label>Fecha<input type="date" class="input" [(ngModel)]="form.fecha"></label></div>
+      <div>
+        <label><input type="checkbox" [(ngModel)]="form.ingreso"> Ingreso</label>
+        <label class="ml-4"><input type="checkbox" [(ngModel)]="form.devolucion"> Devolución</label>
+      </div>
+    </div>
+  
+    <div>
+      <h2 class="font-semibold">Productos</h2>
+      <table class="table-auto w-full border mt-2">
+        <thead>
+          <tr class="bg-gray-100">
+            <th>Parte</th><th>Producto</th><th>Cantidad</th><th>Vencimiento</th><th>Lote</th><th>PL</th><th>F</th><th>DI</th><th>CA</th><th>Empaque</th><th>Estado</th><th>Bodega</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of form.productos, let i = index">
+            <td><input class="input" [(ngModel)]="p.numeroParte"></td>
+            <td><input class="input" [(ngModel)]="p.nombre"></td>
+            <td><input class="input" [(ngModel)]="p.cantidad"></td>
+            <td><input class="input" type="date" [(ngModel)]="p.vencimiento"></td>
+            <td><input class="input" [(ngModel)]="p.lote"></td>
+            <td><input type="checkbox" [(ngModel)]="p.pl"></td>
+            <td><input type="checkbox" [(ngModel)]="p.f"></td>
+            <td><input type="checkbox" [(ngModel)]="p.di"></td>
+            <td><input type="checkbox" [(ngModel)]="p.ca"></td>
+            <td>
+              <div class="space-x-1">
+                <label><input type="checkbox" [(ngModel)]="p.empaque.bueno"> B</label>
+                <label><input type="checkbox" [(ngModel)]="p.empaque.humedo"> H</label>
+                <label><input type="checkbox" [(ngModel)]="p.empaque.roto"> R</label>
+                <label><input class="input w-16" [(ngModel)]="p.empaque.temp" placeholder="Temp"></label>
+              </div>
+            </td>
+            <td><input class="input" [(ngModel)]="p.estadoCalidad"></td>
+            <td><input class="input" [(ngModel)]="p.bodega"></td>
+            <td>
+                <button (click)="removeProducto(i)" class="text-red-500 hover:underline">🗑️</button>
+              </td>
+          </tr>
+        </tbody>
+        <tr>
+            <td colspan="13">
+              <button (click)="addProducto()" class="mt-2 bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+                + Agregar producto
+              </button>
+            </td>
+          </tr>
+          
+      </table>
+    </div>
+  
+    <div>
+      <label>Observaciones<textarea class="input w-full" rows="3" [(ngModel)]="form.observaciones"></textarea></label>
+    </div>
+  </div>
+  

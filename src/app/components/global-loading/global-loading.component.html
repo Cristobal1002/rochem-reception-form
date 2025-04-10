@@ -1,0 +1,8 @@
+<div *ngIf="isLoading | async" class=" absolute flex items-center justify-center bg-white bg-opacity-75 z-50 m-7 rounded-xl h-full w-full">
+    <div class="text-center">
+        <div class="loader mx-auto mb-2"></div>
+        <div class="text-lg  font-light text-gray-700">
+            {{ loadingMessage | async }}
+        </div>
+    </div>
+</div>

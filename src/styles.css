@@ -5,3 +5,9 @@
 .input {
     @apply border border-gray-300 rounded p-1 w-full;
   }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.loader {
+  @apply w-10 h-10 border-4 border-t-4 border-gray-200 rounded-full animate-spin;
+  border-top-color: #3490dc;
+}

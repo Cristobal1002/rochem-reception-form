@@ -72,7 +72,7 @@ export class RecepcionFormComponent {
   }
   
 
-  selectedOrder(poNumber: string) {
+  /*selectedOrder(poNumber: string) {
     this.loadingService.show('Cargando orden de compra')
     this.receptionService.getOrderData(poNumber).subscribe(response => {
       const data = response?.data || [];
@@ -125,7 +125,68 @@ export class RecepcionFormComponent {
       this.loadingService.hide()
       this.mostrarLista = false;
     });
+  }*/
+
+  selectedOrder(poNumber: string) {
+    this.loadingService.show('Cargando orden de compra');
+  
+    this.receptionService.getOrderData(poNumber).subscribe(response => {
+      const data = response?.data || [];
+      if (!data.length) return;
+  
+      const orden = data[0];
+  
+      this.form.patchValue({
+        ordenCompra: orden.NumeroOrdenCompra?.trim() || '',
+        proveedor: orden.NombreProveedor?.trim() || '',
+        cliente: orden.IDProveedor?.trim() || '',
+        fecha: orden.FechaDocumento?.substring(0, 10) || '',
+        factura: orden.NumeroRecepcionCompra?.trim() || ''
+      });
+  
+      this.productos.clear();
+  
+      for (const p of data) {
+        // Artículo padre (siempre)
+        this.productos.push(this.createProducto(p.NumeroArticulo, p.NumeroArticulo, p.DescripcionArticulo, p.CantidadOrdenada));
+  
+        // Si es kit, agregamos sus componentes
+        if (p.EsKit && p.Componentes?.length) {
+          for (const c of p.Componentes) {
+            this.productos.push(this.createProducto('', c.Componente, c.Descripcion, ''));
+          }
+        }
+      }
+  
+      this.loadingService.hide();
+      this.mostrarLista = false;
+    });
   }
+  
+  createProducto(item = '', numeroParte = '', nombre = '', cantidad = ''): FormGroup {
+    return this.fb.group({
+      item: [item],
+      numeroParte: [numeroParte],
+      nombre: [nombre],
+      cantidad: [cantidad],
+      vencimiento: [''],
+      lote: [''],
+      tamanoMuestra: [''],
+      etiquetaFabrica: [''],
+      estadoCalidad: [''],
+      bodega: [''],
+      compartimiento: [''],
+      pl: [false],
+      f: [false],
+      li: [false],
+      di: [false],
+      ca: [false],
+      empaque: this.fb.group({
+        b: [false], h: [false], r: [false], a: [false], m: [false], o: [false], temp: ['']
+      })
+    });
+  }
+  
   
 
   displayOrden(orden: any): string {
@@ -136,7 +197,7 @@ export class RecepcionFormComponent {
     return this.form.get('productos') as FormArray;
   }
 
-  createProducto(): FormGroup {
+  /*createProducto(): FormGroup {
     return this.fb.group({
       item: [''],
       numeroParte: [''],
@@ -164,7 +225,7 @@ export class RecepcionFormComponent {
         temp: ['']
       })
     });
-  }
+  }*/
 
   seleccionarOrden(orden: any) {
     // Llenamos los datos del encabezado

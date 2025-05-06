@@ -44,6 +44,7 @@ export class RecepcionFormComponent {
     proveedor: [''],
     cliente: [''],
     fecha: [''],
+    fechaRecibo: [this.hoy()],
     ingreso: [true],
     devolucion: [false],
     observaciones: [''],
@@ -69,6 +70,7 @@ export class RecepcionFormComponent {
   
       map(resp => resp?.data || [])
     );
+    this.form.get('fechaRecibo')?.setValue(this.hoy());
   }
   
 
@@ -298,5 +300,9 @@ export class RecepcionFormComponent {
     const payload = this.form.value;
     console.log('Enviando al backend:', payload);
     // Aquí iría la llamada a this.miServicio.guardar(payload)...
+  }
+  hoy(): string {
+    const today = new Date();
+    return today.toISOString().substring(0, 10);
   }
 }

@@ -3,6 +3,9 @@
 
   <!-- 🔍 Buscador de Orden de Compra -->
   <div class="relative ">
+    <div class="grid grid-cols-3 gap-1 mb-3">
+      <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
+    </div>
     <label class="block font-semibold mb-1">Buscar Orden de Compra</label>
 
     <input type="text"
@@ -40,7 +43,7 @@
 
     <div class="grid grid-cols-2 gap-4">
       <div><label>Proveedor<input class="input" formControlName="proveedor" readonly></label></div>
-      <div><label>Fecha<input type="date" class="input" formControlName="fecha" readonly></label></div>
+      <div><label>Fecha OC<input type="date" class="input" formControlName="fecha" readonly></label></div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">

@@ -305,4 +305,45 @@ export class RecepcionFormComponent {
     const today = new Date();
     return today.toISOString().substring(0, 10);
   }
+
+  imprimir() {
+    const contenido = document.querySelector('.print-area')?.innerHTML;
+    if (!contenido) {
+      alert('No se pudo encontrar el contenido para imprimir.');
+      return;
+    }
+  
+    const ventana = window.open('', '_blank', 'width=1000,height=1000');
+    if (ventana) {
+      ventana.document.write(`
+        <html>
+          <head>
+            <title>Recepción de Productos</title>
+            <style>
+              @page {
+                size: landscape;
+                margin: 1cm;
+              }
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              table { width: 100%; border-collapse: collapse; font-size: 11px; }
+              th, td { border: 1px solid #ccc; padding: 4px; text-align: center; }
+              .input { border: none; width: 100%; font-size: 11px; }
+              input[type="checkbox"] { transform: scale(1.2); margin: 2px; }
+              h3 { margin-bottom: 1rem; font-size: 18px; }
+              label { font-weight: bold; font-size: 12px; }
+              input[readonly] { background-color: #f9f9f9; }
+              .no-print { display: none !important; }
+            </style>
+          </head>
+          <body onload="window.print(); window.close();">
+            ${contenido}
+          </body>
+        </html>
+      `);
+      ventana.document.close();
+    }
+  }
+  
+  
+  
 }

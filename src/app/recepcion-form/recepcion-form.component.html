@@ -1,152 +1,160 @@
-<div class="w-full mx-auto p-8 space-y-6 text-sm">
-  <h3 class="text-xl font-bold">Recepción e Inspección Física de Productos</h3>
+<div class="w-full mx-auto p-8 space-y-6 text-sm print-area">
+  <div class="w-full mx-auto p-8 space-y-6 text-sm">
+    <h3 class="text-xl font-bold">Recepción e Inspección Física de Productos</h3>
 
-  <!-- 🔍 Buscador de Orden de Compra -->
-  <div class="relative ">
-    <div class="grid grid-cols-3 gap-1 mb-3">
-      <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
-    </div>
-    <label class="block font-semibold mb-1">Buscar Orden de Compra</label>
-
-    <input type="text"
-      class="input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      placeholder="Escribe al menos 3 caracteres" [formControl]="ordenControl" 
-      (input)="mostrarLista = true" (blur)="ocultarListaConRetraso()" />
-
-    <!-- Debug opcional -->
-    <p class="text-xs text-gray-500 mt-1">
-      Resultados: {{ (ordenesFiltradas$ | async)?.length }}
-    </p>
-
-    <ul *ngIf="mostrarLista "
-      class="absolute z-[999] w-full bg-white border  shadow-lg max-h-60 overflow-auto mt-1 rounded text-sm">
-      
-      <li *ngFor="let orden of ordenesFiltradas$ | async" class="px-4 py-2 cursor-pointer hover:bg-blue-100"
-        (mousedown)="selectedOrder(orden.NumeroOrdenCompra)">
-        {{ orden.NumeroOrdenCompra.trim() }} - {{ orden.NombreProveedor.trim() }}
-      </li>
-    </ul>
-
-    <ul *ngIf="mostrarLista && (ordenesFiltradas$ | async)?.length === 0"
-      class="absolute z-50 w-full bg-white border border-gray-300 shadow-md mt-1 rounded text-sm">
-      <li class="px-4 py-2 text-gray-400 italic">No se encontraron resultados.</li>
-    </ul>
-  </div>
-
-  <!-- 🧾 Datos generales de la orden -->
-  <form [formGroup]="form" class="space-y-6">
-    <div class="grid grid-cols-3 gap-4">
-      <div><label>Orden Compra<input class="input" formControlName="ordenCompra" readonly></label></div>
-      <div><label>No. Guía<input class="input" formControlName="guia"></label></div>
-      <div><label>Factura<input class="input" formControlName="factura"></label></div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-      <div><label>Proveedor<input class="input" formControlName="proveedor" readonly></label></div>
-      <div><label>Fecha OC<input type="date" class="input" formControlName="fecha" readonly></label></div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <label><input type="checkbox" formControlName="ingreso"> Ingreso</label>
-        <label class="ml-4"><input type="checkbox" formControlName="devolucion"> Devolución</label>
+    <!-- 🔍 Buscador de Orden de Compra -->
+    <div class="relative ">
+      <div class="grid grid-cols-3 gap-1 mb-3">
+        <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
       </div>
+      <label class="block font-semibold mb-1 no-print">Buscar Orden de Compra</label>
+
+      <input type="text"
+        class=" no-print input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Escribe al menos 3 caracteres" [formControl]="ordenControl" (input)="mostrarLista = true"
+        (blur)="ocultarListaConRetraso()" />
+
+      <!-- Debug opcional -->
+      <p class="text-xs text-gray-500 mt-1 no-print">
+        Resultados: {{ (ordenesFiltradas$ | async)?.length }}
+      </p>
+
+      <ul *ngIf="mostrarLista "
+        class="absolute z-[999] w-full bg-white border  shadow-lg max-h-60 overflow-auto mt-1 rounded text-sm">
+
+        <li *ngFor="let orden of ordenesFiltradas$ | async" class="px-4 py-2 cursor-pointer hover:bg-blue-100"
+          (mousedown)="selectedOrder(orden.NumeroOrdenCompra)">
+          {{ orden.NumeroOrdenCompra.trim() }} - {{ orden.NombreProveedor.trim() }}
+        </li>
+      </ul>
+
+      <ul *ngIf="mostrarLista && (ordenesFiltradas$ | async)?.length === 0"
+        class="absolute z-50 w-full bg-white border border-gray-300 shadow-md mt-1 rounded text-sm">
+        <li class="px-4 py-2 text-gray-400 italic">No se encontraron resultados.</li>
+      </ul>
     </div>
 
-    <!-- 📦 Tabla de productos -->
-    <div formArrayName="productos">
-      <h2 class="font-semibold">Productos</h2>
-      <table class="table-auto w-full border mt-2">
-        <thead>
-          <tr class="bg-gray-200 text-center text-xs font-semibold">
-            <th colspan="6" class="border">RECEPCIÓN DE PRODUCTOS</th>
-            <th colspan="7" class="border">INSPECCIÓN DE PRODUCTOS</th>
-            <th class="border"></th>
-          </tr>
-          <tr class="bg-gray-100 text-center text-xs">
-            <th class="border px-2 py-1 w-24">ITEM</th>
-            <th class="border px-2 py-1">NÚMERO DE COMPONENTE</th>
-            <th class="border px-2 py-1 w-48">NOMBRE DEL PRODUCTO</th>
-            <th class="border px-2 py-1">CANTIDAD</th>
-            <th class="border px-2 py-1">FECHA DE<br>VENCIMIENTO</th>
-            <th class="border px-2 py-1">
-              <div>DOCUMENTACIÓN</div>
-              <div class="flex justify-center gap-1 text-[10px] mt-1">
-                <span>PL</span><span>F</span><span>LI</span><span>DI</span><span>CA</span>
-              </div>
-            </th>
-            <th class="border px-2 py-1">LOTE</th>
-            <th class="border px-2 py-1">TAMAÑO<br>MUESTRA</th>
-            <th class="border px-2 py-1">
-              <div>CONDICIONES DE EMPAQUE</div>
-              <div class="flex justify-center gap-1 text-[10px] mt-1">
-                <span>B</span><span>H</span><span>R</span><span>A</span><span>M</span><span>O</span>
-              </div>
-            </th>
-            <th class="border px-2 py-1">TEMP °C</th>
-            <th class="border px-2 py-1">Etiqueta<br>Fábrica</th>
-            <th class="border px-2 py-1">ESTADO DE CALIDAD</th>
-            <th class="border px-2 py-1">BODEGA</th>
-            <th class="border px-2 py-1">COMPARTIMIENTO</th>
-          </tr>
-        </thead>
+    <!-- 🧾 Datos generales de la orden -->
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-3 gap-4">
+        <div><label>Orden Compra<input class="input" formControlName="ordenCompra" readonly></label></div>
+        <div><label>No. Guía<input class="input" formControlName="guia"></label></div>
+        <div><label>Factura<input class="input" formControlName="factura"></label></div>
+      </div>
 
-        <tbody>
-          <tr *ngFor="let p of productos.controls; let i = index" [formGroupName]="i" class="text-xs text-center">
-            <td class="border"><input class="input" formControlName="item"></td>
-            <td class="border"><input class="input" formControlName="numeroParte"></td>
-            <td class="border"><input class="input" formControlName="nombre"></td>
-            <td class="border"><input class="input" formControlName="cantidad"></td>
-            <td class="border"><input type="date" class="input" formControlName="vencimiento"></td>
-            <td class="border">
-              <div class="flex justify-center gap-1">
-                <input type="checkbox" formControlName="pl" title="PL">
-                <input type="checkbox" formControlName="f" title="F">
-                <input type="checkbox" formControlName="li" title="LI">
-                <input type="checkbox" formControlName="di" title="DI">
-                <input type="checkbox" formControlName="ca" title="CA">
-              </div>
-            </td>
-            <td class="border"><input class="input" formControlName="lote"></td>
-            <td class="border"><input class="input" formControlName="tamanoMuestra"></td>
-            <td class="border">
-              <div formGroupName="empaque" class="flex justify-center gap-1">
-                <input type="checkbox" formControlName="b">
-                <input type="checkbox" formControlName="h">
-                <input type="checkbox" formControlName="r">
-                <input type="checkbox" formControlName="a">
-                <input type="checkbox" formControlName="m">
-                <input type="checkbox" formControlName="o">
-              </div>
-            </td>
-            <td class="border">
-              <div formGroupName="empaque">
-                <input class="input w-16" formControlName="temp" placeholder="°C" />
-              </div>
-            </td>
-            <td class="border"><input class="input" formControlName="etiquetaFabrica"></td>
-            <td class="border"><input class="input" formControlName="estadoCalidad"></td>
-            <td class="border"><input class="input" formControlName="bodega"></td>
-            <td class="border"><input class="input" formControlName="compartimiento"></td>
-            <td class="border">
-              <button type="button" (click)="removeProducto(i)" class="text-red-500 hover:underline">🗑️</button>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label>Proveedor<input class="input" formControlName="proveedor" readonly></label></div>
+        <div><label>Fecha OC<input type="date" class="input" formControlName="fecha" readonly></label></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label><input type="checkbox" formControlName="ingreso"> Ingreso</label>
+          <label class="ml-4"><input type="checkbox" formControlName="devolucion"> Devolución</label>
+        </div>
+      </div>
+
+      <!-- 📦 Tabla de productos -->
+      <div formArrayName="productos">
+        <h2 class="font-semibold">Productos</h2>
+        <table class="table-auto w-full border mt-2">
+          <thead>
+            <tr class="bg-gray-200 text-center text-xs font-semibold">
+              <th colspan="6" class="border">RECEPCIÓN DE PRODUCTOS</th>
+              <th colspan="7" class="border">INSPECCIÓN DE PRODUCTOS</th>
+              <th class="border"></th>
+            </tr>
+            <tr class="bg-gray-100 text-center text-xs">
+              <th class="border px-2 py-1 w-24">ITEM</th>
+              <th class="border px-2 py-1">NÚMERO DE COMPONENTE</th>
+              <th class="border px-2 py-1 w-48">NOMBRE DEL PRODUCTO</th>
+              <th class="border px-2 py-1">CANTIDAD</th>
+              <th class="border px-2 py-1">FECHA DE<br>VENCIMIENTO</th>
+              <th class="border px-2 py-1">
+                <div>DOCUMENTACIÓN</div>
+                <div class="flex justify-center gap-1 text-[10px] mt-1">
+                  <span>PL</span><span>F</span><span>LI</span><span>DI</span><span>CA</span>
+                </div>
+              </th>
+              <th class="border px-2 py-1">LOTE</th>
+              <th class="border px-2 py-1">TAMAÑO<br>MUESTRA</th>
+              <th class="border px-2 py-1">
+                <div>CONDICIONES DE EMPAQUE</div>
+                <div class="flex justify-center gap-1 text-[10px] mt-1">
+                  <span>B</span><span>H</span><span>R</span><span>A</span><span>M</span><span>O</span>
+                </div>
+              </th>
+              <th class="border px-2 py-1">TEMP °C</th>
+              <th class="border px-2 py-1">Etiqueta<br>Fábrica</th>
+              <th class="border px-2 py-1">ESTADO DE CALIDAD</th>
+              <th class="border px-2 py-1">BODEGA</th>
+              <th class="border px-2 py-1">COMPARTIMIENTO</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let p of productos.controls; let i = index" [formGroupName]="i" class="text-xs text-center">
+              <td class="border"><input class="input" formControlName="item"></td>
+              <td class="border"><input class="input" formControlName="numeroParte"></td>
+              <td class="border"><input class="input" formControlName="nombre"></td>
+              <td class="border"><input class="input" formControlName="cantidad"></td>
+              <td class="border"><input type="date" class="input" formControlName="vencimiento"></td>
+              <td class="border">
+                <div class="flex justify-center gap-1">
+                  <input type="checkbox" formControlName="pl" title="PL">
+                  <input type="checkbox" formControlName="f" title="F">
+                  <input type="checkbox" formControlName="li" title="LI">
+                  <input type="checkbox" formControlName="di" title="DI">
+                  <input type="checkbox" formControlName="ca" title="CA">
+                </div>
+              </td>
+              <td class="border"><input class="input" formControlName="lote"></td>
+              <td class="border"><input class="input" formControlName="tamanoMuestra"></td>
+              <td class="border">
+                <div formGroupName="empaque" class="flex justify-center gap-1">
+                  <input type="checkbox" formControlName="b">
+                  <input type="checkbox" formControlName="h">
+                  <input type="checkbox" formControlName="r">
+                  <input type="checkbox" formControlName="a">
+                  <input type="checkbox" formControlName="m">
+                  <input type="checkbox" formControlName="o">
+                </div>
+              </td>
+              <td class="border">
+                <div formGroupName="empaque">
+                  <input class="input w-16" formControlName="temp" placeholder="°C" />
+                </div>
+              </td>
+              <td class="border"><input class="input" formControlName="etiquetaFabrica"></td>
+              <td class="border"><input class="input" formControlName="estadoCalidad"></td>
+              <td class="border"><input class="input" formControlName="bodega"></td>
+              <td class="border"><input class="input" formControlName="compartimiento"></td>
+              <td class="border">
+                <button type="button" (click)="removeProducto(i)" class="text-red-500 hover:underline">🗑️</button>
+              </td>
+            </tr>
+          </tbody>
+          <tr>
+            <td colspan="15">
+              <button type="button" (click)="addProducto()"
+                class="no-print mt-2  text-blue-500 px-4 py-1 rounded hover:bg-blue-600 hover:text-white mb-3 ml-3">
+                + Agregar producto
+              </button>
             </td>
           </tr>
-        </tbody>
-        <tr>
-          <td colspan="15">
-            <button type="button" (click)="addProducto()" class="mt-2  text-blue-500 px-4 py-1 rounded hover:bg-blue-600 hover:text-white mb-3 ml-3">
-              + Agregar producto
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
+        </table>
+      </div>
 
-    <div>
-      <label>Observaciones
-        <textarea class="input w-full" rows="3" formControlName="observaciones"></textarea>
-      </label>
-    </div>
-  </form>
+      <div>
+        <label>Observaciones
+          <textarea class="input w-full" rows="3" formControlName="observaciones"></textarea>
+        </label>
+      </div>
+    </form>
+
+    <button type="button" class="no-print bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" (click)="imprimir()">
+      🖨️ Imprimir Recepción
+    </button>
+
+  </div>
 </div>

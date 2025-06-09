@@ -1,30 +1,33 @@
 <div class="w-full mx-auto p-8 space-y-6 text-sm print-area">
   <div class="w-full mx-auto p-8 space-y-6 text-sm">
-    <h3 class="text-xl font-bold">Recepción e Inspección Física de Productos</h3>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-bold">Recepción e Inspección Física de Productos</h3>
+      <img src="/images/logo_rochem.jpeg" alt="Logo" class="h-12 w-auto" />
+    </div>
+    <div *ngIf="estadoCerrado" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+      Esta orden está <strong>cerrada</strong>. No se puede modificar.
+    </div>
 
     <!-- 🔍 Buscador de Orden de Compra -->
-    <div class="relative ">
-      <div class="grid grid-cols-3 gap-1 mb-3">
-        <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
-      </div>
+    <div class="relative">
       <label class="block font-semibold mb-1 no-print">Buscar Orden de Compra</label>
-
       <input type="text"
-        class=" no-print input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        placeholder="Escribe al menos 3 caracteres" [formControl]="ordenControl" (input)="mostrarLista = true"
+        class="no-print input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        placeholder="Escribe al menos 3 caracteres"
+        [formControl]="ordenControl"
+        (input)="mostrarLista = true"
         (blur)="ocultarListaConRetraso()" />
-
-      <!-- Debug opcional -->
       <p class="text-xs text-gray-500 mt-1 no-print">
         Resultados: {{ (ordenesFiltradas$ | async)?.length }}
       </p>
 
-      <ul *ngIf="mostrarLista "
-        class="absolute z-[999] w-full bg-white border  shadow-lg max-h-60 overflow-auto mt-1 rounded text-sm">
-
-        <li *ngFor="let orden of ordenesFiltradas$ | async" class="px-4 py-2 cursor-pointer hover:bg-blue-100"
-          (mousedown)="selectedOrder(orden.NumeroOrdenCompra)">
-          {{ orden.NumeroOrdenCompra.trim() }} - {{ orden.NombreProveedor.trim() }}
+      <ul *ngIf="mostrarLista"
+        class="absolute z-[999] w-full bg-white border shadow-lg max-h-60 overflow-auto mt-1 rounded text-sm">
+        <li *ngFor="let orden of ordenesFiltradas$ | async"
+            class="px-4 py-2 cursor-pointer hover:bg-blue-100"
+            (mousedown)="selectedOrder(orden.NumeroOrdenCompra, orden.source)">
+          {{ orden.NumeroOrdenCompra.trim() }} - {{ orden.NombreProveedor?.trim() || 'Sin proveedor' }}
+          <span class="ml-2 text-xs italic text-gray-500">[{{ orden.source }}]</span>
         </li>
       </ul>
 
@@ -45,6 +48,18 @@
       <div class="grid grid-cols-2 gap-4">
         <div><label>Proveedor<input class="input" formControlName="proveedor" readonly></label></div>
         <div><label>Fecha OC<input type="date" class="input" formControlName="fecha" readonly></label></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
+        <div>
+          <label>Estado
+            <select class="input" formControlName="estado">
+              <option value="Borrador">Borrador</option>
+              <option value="Cerrado">Cerrado</option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
@@ -137,7 +152,7 @@
           <tr>
             <td colspan="15">
               <button type="button" (click)="addProducto()"
-                class="no-print mt-2  text-blue-500 px-4 py-1 rounded hover:bg-blue-600 hover:text-white mb-3 ml-3">
+                class="no-print mt-2 text-blue-500 px-4 py-1 rounded hover:bg-blue-600 hover:text-white mb-3 ml-3">
                 + Agregar producto
               </button>
             </td>
@@ -150,11 +165,15 @@
           <textarea class="input w-full" rows="3" formControlName="observaciones"></textarea>
         </label>
       </div>
+
+      <div class="no-print flex justify-end gap-3">
+        <button type="button" (click)="guardar()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          💾 Guardar Recepción
+        </button>
+        <button type="button" (click)="imprimir()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          🖨️ Imprimir Recepción
+        </button>
+      </div>
     </form>
-
-    <button type="button" class="no-print bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" (click)="imprimir()">
-      🖨️ Imprimir Recepción
-    </button>
-
   </div>
 </div>

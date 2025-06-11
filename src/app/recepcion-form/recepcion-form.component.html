@@ -44,30 +44,26 @@
         <div><label>No. Guía<input class="input" formControlName="guia"></label></div>
         <div><label>Factura<input class="input" formControlName="factura"></label></div>
       </div>
-
-      <div class="grid grid-cols-2 gap-4">
+      
+      <div class="grid grid-cols-3 gap-4">
         <div><label>Proveedor<input class="input" formControlName="proveedor" readonly></label></div>
         <div><label>Fecha OC<input type="date" class="input" formControlName="fecha" readonly></label></div>
+        <div><label>Planilla<input class="input" formControlName="planilla"></label></div> <!-- 🆕 -->
       </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div><label>Fecha Recibimiento<input type="date" class="input" formControlName="fechaRecibo"></label></div>
-        <div>
-          <label>Estado
-            <select class="input" formControlName="estado">
-              <option value="Borrador">Borrador</option>
-              <option value="Cerrado">Cerrado</option>
-            </select>
-          </label>
-        </div>
-      </div>
-
+      
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label><input type="checkbox" formControlName="ingreso"> Ingreso</label>
           <label class="ml-4"><input type="checkbox" formControlName="devolucion"> Devolución</label>
         </div>
+        <div>
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" formControlName="reactivo" />
+            Reactivo <!-- 🆕 -->
+          </label>
+        </div>
       </div>
+
 
       <!-- 📦 Tabla de productos -->
       <div formArrayName="productos">
